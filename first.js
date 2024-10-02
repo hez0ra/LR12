@@ -1,4 +1,4 @@
-const EMAIL_REGEXP = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
+const EMAIL_REGEXP = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/g; // регулярное выражение для проверка электронной почты
 
 // Класс User для отдельного контакта
 class User {
@@ -55,7 +55,7 @@ class ContactsApp extends Contacts{
     }
   
     createInterface() {
-      // Создаем форму для добавления и редактирования контактов
+      // Создаем форму для добавления контактов
       const form = document.createElement('form');
       form.innerHTML = `
         <input type="text" id="name" placeholder="Имя" required>
@@ -71,7 +71,7 @@ class ContactsApp extends Contacts{
       this.contactsList.className = 'contacts-list';
       this.app.append(this.contactsList);
   
-      // Добавляем обработчики событий для кнопок
+      // Добавляем обработчик событий для кнпоки
       document.getElementById('addBtn').addEventListener('click', () => this.onAdd());
     }
   
