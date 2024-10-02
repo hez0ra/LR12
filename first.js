@@ -1,4 +1,4 @@
-
+const EMAIL_REGEXP = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/iu;
 
 // Класс User для отдельного контакта
 class User {
@@ -60,8 +60,9 @@ class ContactsApp extends Contacts{
       form.innerHTML = `
         <input type="text" id="name" placeholder="Имя" required>
         <input type="text" id="phone" placeholder="Телефон" required>
+        <input type="text" id="address" placeholder="Адрес" required>
+        <input type="text" id="email" placeholder="Электронная почта" required>
         <button type="button" id="addBtn">Добавить</button>
-        <button type="button" id="editBtn">Редактировать</button>
       `;
       this.app.append(form);
   
@@ -72,31 +73,42 @@ class ContactsApp extends Contacts{
   
       // Добавляем обработчики событий для кнопок
       document.getElementById('addBtn').addEventListener('click', () => this.onAdd());
-      document.getElementById('editBtn').addEventListener('click', () => this.onEdit());
     }
-
-    // add(contact){
-    //     super.add(contact)
-    // }
   
     onAdd() {
       // Логика добавления контакта
+      const id = this.get()[this.get().length - 1].id + 1;
       const name = document.getElementById('name').value;
       const phone = document.getElementById('phone').value;
-      if (name && phone) {
-        const contact = { name, phone };
+      const address = document.getElementById('address').value;
+      const email = document.getElementById('email').value;
+      
+      if(!EMAIL_REGEXP.test(email)) alert('Введите корректный адрес почты')
+      else if (name && phone && address && email) {
+        const contact = {id: id, name: name, email: email, address: address, phone: phone};
         super.add(contact);
         this.get();
+        document.getElementById('name').value = "";
+        document.getElementById('phone').value = "";
+        document.getElementById('address').value = "";
+        document.getElementById('email').value = "";
       }
     }
   
-    onEdit() {
+    onEdit(id) {
       // Логика редактирования контакта
-      const name = document.getElementById('name').value;
-      const phone = document.getElementById('phone').value;
-      if (name && phone) {
-        const contact = { name, phone };
-        super.edit(contact);
+      let name = document.getElementById('name').value;
+      let phone = document.getElementById('phone').value;
+      let address = document.getElementById('address').value;
+      let email = document.getElementById('email').value;
+      name = prompt("Введите новое имя", name);
+      phone = prompt("Введите новый номер телефона", phone);
+      address = prompt("Введите новый адресс", address);
+      email = prompt("Введите новую почту", email);
+      if(!EMAIL_REGEXP.test(email)) alert('Введите корректный адрес почты')
+      else if (name && phone && address && email) {
+        const contact = {id: id, name: name, email: email, address: address, phone: phone};
+        super.edit(id, contact);
         this.get();
       }
     }
@@ -115,12 +127,18 @@ class ContactsApp extends Contacts{
         const contactItem = document.createElement('div');
         contactItem.className = 'contact-item';
         contactItem.innerHTML = `
-          <span style = "display: inline-block; margin-top: 10px;">${contact.name}</span>
-          <span>${contact.phone}</span>
+        <div class = "contact">
+          <span class = "contact">${contact.name}</span>
+          <span class = "contact">${contact.phone}</span>
+          <span class = "contact">${contact.address}</span>
+          <span class = "contact">${contact.email}</span>
           <button onclick="app.onRemove(${contact.id})">Удалить</button>
+          <button onclick="app.onEdit(${contact.id})">Изменить</button>
+          </div>
         `;
         this.contactsList.appendChild(contactItem);
       });
+      return contacts;
     }
   }
     

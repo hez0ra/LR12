@@ -1,0 +1,8 @@
+.contact{
+    display: block;
+    padding: 5px;
+}
+
+.contact>div{
+    margin-bottom: 20px;
+}
